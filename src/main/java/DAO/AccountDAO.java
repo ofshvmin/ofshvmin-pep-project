@@ -3,19 +3,38 @@ package DAO;
 import Util.ConnectionUtil;
 import Model.Account;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 // import java.sql.ResultSet;
 // import java.sql.SQLException;
 // import java.util.ArrayList;
 // import java.util.List;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 
 
 
 
 public class AccountDAO {
+
+
+    public List<Account> getAllAccounts(){
+        Connection connection = ConnectionUtil.getConnection();
+        List<Account> accounts = new ArrayList<>();
+        try {
+            //Write SQL logic here
+            String sql = "SELECT * FROM Account";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            ResultSet rs = preparedStatement.executeQuery();
+            while(rs.next()){
+                Account account = new Account(rs.getInt("user_id"), rs.getString("username"), rs.getString("password"));
+                accounts.add(account);
+            }
+        }catch(SQLException e){
+            System.out.println(e.getMessage());
+        }
+        return accounts;
+    }
 
     public Account insertAccount(Account account) {
         Connection connection = ConnectionUtil.getConnection();

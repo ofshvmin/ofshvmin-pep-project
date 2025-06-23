@@ -41,11 +41,19 @@ public class SocialMediaController {
      * @param context The Javalin Context object manages information about both the HTTP request and response.
      */
     private void registerHandler(Context context) throws JsonProcessingException {
+
+        String body = context.body();
+        System.out.println("Incoming request body: " + body);
+
         ObjectMapper mapper = new ObjectMapper();
-        Account account = mapper.readValue(context.body(), Account.class);
+
+        Account account = mapper.readValue(body, Account.class);
+        System.out.println("Parsed Account object: " + account);
+        
         Account addedAccount = accountService.addAccount(account);
+
         if(addedAccount != null) {
-            context.json(mapper.writeValueAsString(addedAccount));
+            context.status(200).json(addedAccount);
         } else {
             context.status(400);
         }

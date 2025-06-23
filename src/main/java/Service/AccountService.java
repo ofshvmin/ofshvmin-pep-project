@@ -18,13 +18,13 @@ public class AccountService {
     }
 
     public Account addAccount(Account account) {
-        // List<Account> existingAccounts = accountDAO.getAllAccounts(); //< - doesn'ty exist yet
-        // for(Account existingAccount : existingAccounts) {
-        //     if(existingAccount.getUsername().equalsIgnoreCase(account.getUsername())) {
-        //         //what actuall??
-        //         return null;
-        //     }
-        // }
+        List<Account> existingAccounts = accountDAO.getAllAccounts(); //< - doesn'ty exist yet
+        for(Account existingAccount : existingAccounts) {
+            if(existingAccount.getUsername().equalsIgnoreCase(account.getUsername())) {
+                //what actuall??
+                return null;
+            }
+        }
         return accountDAO.insertAccount(account);
     }
     

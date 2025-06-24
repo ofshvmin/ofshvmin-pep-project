@@ -21,6 +21,7 @@ public class AccountService {
         return accountDAO.getAllAccounts();
     }
 
+
     public Account addAccount(Account account) {
         List<Account> existingAccounts = accountDAO.getAllAccounts();
         for(Account existingAccount : existingAccounts) {
@@ -36,5 +37,15 @@ public class AccountService {
         }
         return accountDAO.insertAccount(account);
     }
-    
+
+
+    public Account login(String username, String password) {
+        if (username == null || username.isBlank() || password == null || password.isBlank()) {
+            return null;
+        }
+
+        return accountDAO.getAccountByUsernameAndPassword(username, password);
+
+    }
 }
+

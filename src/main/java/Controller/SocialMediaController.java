@@ -11,7 +11,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 
-import java.sql.SQLOutput;
 import java.util.List;
 
 /**
@@ -46,6 +45,7 @@ public class SocialMediaController {
         app.get("/messages/{message_id}", this::getMessageByIdHandler);
         app.delete("/messages/{message_id}", this::deleteMessageByIdHandler);
         app.patch("/messages/{message_id}", this::updateMessageByIdHandler);
+        app.get("/accounts/{account_id}/messages", this::getMessagesByAccountHandler);
 
         return app;
     }
@@ -128,5 +128,17 @@ public class SocialMediaController {
         } else {
             context.status(200).json(updatedMessage);
         }
+    }
+
+    private void getMessagesByAccountHandler(Context context) {
+
+
+        int account_id = Integer.parseInt(context.pathParam("account_id"));
+        List<Message> messages = messageService.getAllMessagesByAccount(account_id);
+
+        System.out.println("Controller var messages: " + messages);
+        System.out.println("Context messages are: " + context.json(messages).body());
+        context.status(200).json(messages);
+
     }
 }

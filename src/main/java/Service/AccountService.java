@@ -21,7 +21,6 @@ public class AccountService {
         return accountDAO.getAllAccounts();
     }
 
-
     public Account addAccount(Account account) {
         List<Account> existingAccounts = accountDAO.getAllAccounts();
         for(Account existingAccount : existingAccounts) {

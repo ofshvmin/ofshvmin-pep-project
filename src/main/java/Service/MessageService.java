@@ -27,28 +27,27 @@ public class MessageService {
         return messageDAO.getAllMessages();
     }
 
-
     public Message addMessage(Message message) {
         //text cannot be blank
-        if (message.getMessage_text().trim().length() < 1) {
+        if (message.getMessage_text().trim().isEmpty()) {
             return null;
         }
-
         //must be under 255 chars
         if (message.getMessage_text().length() > 255) {
             return null;
         }
-
+        //must be posted by a valid existing account
         List<Account> validAccounts = accountDAO.getAllAccounts();
         for (Account validAccount : validAccounts)
             if (validAccount.getAccount_id() == message.getPosted_by()) {
                 return messageDAO.insertMessage(message);
-
             }
         return null;
     }
 
+    public Message getMessageById(int message_id) {
+        return messageDAO.getMessageById(message_id);
+    }
+
 
 }
-
-

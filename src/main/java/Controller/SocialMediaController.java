@@ -1,8 +1,10 @@
 package Controller;
 
 import Model.Account;
+import Model.Message;
 import Service.AccountService;
 
+import Service.MessageService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -21,18 +23,22 @@ public class SocialMediaController {
      * @return a Javalin app object which defines the behavior of the Javalin controller.
      */
 
+    private static final ObjectMapper mapper = new ObjectMapper();
+
     AccountService accountService;
+    MessageService messageService;
 
 
     public SocialMediaController() {
         this.accountService = new AccountService();
+        this.messageService = new MessageService();
     }
-
 
     public Javalin startAPI() {
         Javalin app = Javalin.create();
         app.post("/register", this::registerHandler);
         app.post("/login", this::loginHandler);
+        app.post("/messages", this::postMessageHandler);
 
         return app;
     }
@@ -42,15 +48,9 @@ public class SocialMediaController {
      * @param context The Javalin Context object manages information about both the HTTP request and response.
      */
     private void registerHandler(Context context) throws JsonProcessingException {
-
         String body = context.body();
-//        System.out.println("Incoming request body: " + body);
-
-        ObjectMapper mapper = new ObjectMapper();
-
+//        ObjectMapper mapper = new ObjectMapper();
         Account account = mapper.readValue(body, Account.class);
-//        System.out.println("Parsed Account object: " + account);
-        
         Account addedAccount = accountService.addAccount(account);
 
         if(addedAccount != null) {
@@ -58,21 +58,30 @@ public class SocialMediaController {
         } else {
             context.status(400);
         }
-
-        // context.json("sample text");
     }
 
     private void loginHandler(Context context) throws JsonProcessingException {
         String body = context.body();
-        ObjectMapper mapper = new ObjectMapper();
+//        ObjectMapper mapper = new ObjectMapper();
         Account loginAttempt = mapper.readValue(body, Account.class);
-
         Account loggedIn = accountService.login(loginAttempt.getUsername(), loginAttempt.getPassword());
 
         if(loggedIn != null) {
             context.status(200).json(loggedIn);
         } else {
             context.status(401);
+        }
+    }
+
+    private void postMessageHandler(Context context) throws JsonProcessingException {
+        String body = context.body();
+        Message message = mapper.readValue(body, Message.class);
+        Message addedMessage = messageService.addMessage(message);
+
+        if(addedMessage !=null) {
+            context.status(200).json(addedMessage);
+        } else {
+            context.status(400);
         }
     }
 

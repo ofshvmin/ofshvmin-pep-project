@@ -45,11 +45,36 @@ public class MessageService {
         return null;
     }
 
+
+
     public Message getMessageById(int message_id) {
         return messageDAO.getMessageById(message_id);
     }
 
     public Message deleteMessageById(int message_id) {
         return messageDAO.deleteMessageById(message_id);
+    }
+
+    public Message updateMessageById(int message_id, Message message) {
+        //text cannot be blank
+        if (message.getMessage_text().trim().isEmpty()) {
+            return null;
+        }
+        //must be under 255 chars
+        if (message.getMessage_text().length() > 255) {
+            return null;
+        }
+        //find & update the existing message
+        List<Message> existingMessages = messageDAO.getAllMessages();
+        for(Message existingMessage : existingMessages) {
+            if(existingMessage.getMessage_id() == message_id) {
+                message.message_id = existingMessage.getMessage_id();
+                message.posted_by = existingMessage.getPosted_by();
+                message.time_posted_epoch = existingMessage.getTime_posted_epoch();
+
+                return messageDAO.updateMessageById(message_id, message);
+            }
+        }
+        return null;
     }
 }

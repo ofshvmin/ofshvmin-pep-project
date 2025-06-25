@@ -114,6 +114,29 @@ public class MessageDAO {
         }
         return messageToDelete;
     }
+
+    public Message updateMessageById(int message_id, Message message) {
+        Connection connection = ConnectionUtil.getConnection();
+        System.out.println("Message received by DAO is: " + message);
+
+        try {
+            String sql = "UPDATE message SET (posted_by = ?, message_text = ?, time_posted_epoch = ?) WHERE message_id = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+            preparedStatement.setInt(1, message.getPosted_by());
+            preparedStatement.setString(2, message.getMessage_text());
+            preparedStatement.setLong(3, message.getTime_posted_epoch());
+            preparedStatement.setInt(4, message_id);
+
+            int updatedRows = preparedStatement.executeUpdate();
+            if(updatedRows == 0) return null;
+        }
+
+        catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return message;
+    }
 }
 
 

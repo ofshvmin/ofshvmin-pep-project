@@ -38,14 +38,10 @@ public class AccountService {
         return accountDAO.insertAccount(account);
     }
 
-
     public Account login(String username, String password) {
         if (username == null || username.isBlank() || password == null || password.isBlank()) {
             return null;
         }
-
         return accountDAO.getAccountByUsernameAndPassword(username, password);
-
     }
 }
-

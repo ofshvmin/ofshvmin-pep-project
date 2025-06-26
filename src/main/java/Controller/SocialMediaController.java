@@ -131,14 +131,9 @@ public class SocialMediaController {
     }
 
     private void getMessagesByAccountHandler(Context context) {
-
-
         int account_id = Integer.parseInt(context.pathParam("account_id"));
+
         List<Message> messages = messageService.getAllMessagesByAccount(account_id);
-
-        System.out.println("Controller var messages: " + messages);
-        System.out.println("Context messages are: " + context.json(messages).body());
         context.status(200).json(messages);
-
     }
 }

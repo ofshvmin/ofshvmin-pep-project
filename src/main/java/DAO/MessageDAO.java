@@ -50,6 +50,7 @@ public class MessageDAO {
             preparedStatement.setLong(3, message.getTime_posted_epoch());
 
             preparedStatement.executeUpdate();
+
             ResultSet pkeyResultSet = preparedStatement.getGeneratedKeys();
             if (pkeyResultSet.next()) {
                 int generated_message_id = (int) pkeyResultSet.getInt(1);
@@ -91,6 +92,7 @@ public class MessageDAO {
         try {
             String selectQuery = "SELECT * FROM message WHERE message_id = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(selectQuery);
+            
             preparedStatement.setInt(1, message_id);
 
             ResultSet rs = preparedStatement.executeQuery();
@@ -106,7 +108,9 @@ public class MessageDAO {
             }
             String delete = "DELETE FROM message WHERE message_id = ?";
             PreparedStatement deleteStatement = connection.prepareStatement(delete);
+           
             deleteStatement.setInt(1, message_id);
+           
             deleteStatement.executeUpdate();
 
         } catch (SQLException e) {
@@ -118,7 +122,6 @@ public class MessageDAO {
     public Message updateMessageById(int message_id, Message message) {
         Connection connection = ConnectionUtil.getConnection();
         System.out.println("Message received by DAO is: " + message);
-
         try {
             String sql = "UPDATE message SET (posted_by = ?, message_text = ?, time_posted_epoch = ?) WHERE message_id = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
@@ -131,7 +134,6 @@ public class MessageDAO {
             int updatedRows = preparedStatement.executeUpdate();
             if(updatedRows == 0) return null;
         }
-
         catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -144,7 +146,9 @@ public class MessageDAO {
         try {
             String sql = "SELECT message.*, account.account_id FROM message LEFT JOIN account ON message.posted_by = account.account_id WHERE message.posted_by = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
+           
             preparedStatement.setInt(1, account_id);
+           
             ResultSet rs = preparedStatement.executeQuery();
             while (rs.next()) {
                 Message message = new Message(
